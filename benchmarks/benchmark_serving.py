@@ -199,13 +199,13 @@ def main(args: argparse.Namespace):
         latency / (prompt_len + output_len)
         for prompt_len, output_len, latency in REQUEST_LATENCY
     ])
-    print(f"Average latency per token: {avg_per_token_latency:.2f} s")
+    print(f"Average latency per token: {avg_per_token_latency:.4f} s")
     avg_per_output_token_latency = np.mean([
         latency / output_len
         for _, output_len, latency in REQUEST_LATENCY
     ])
     print("Average latency per output token: "
-          f"{avg_per_output_token_latency:.2f} s")
+          f"{avg_per_output_token_latency:.4f} s")
 
     total_input_len = np.sum([input_len for input_len, _, _ in REQUEST_LATENCY])
     print(f"Total input tokens: {total_input_len:.2f}")
