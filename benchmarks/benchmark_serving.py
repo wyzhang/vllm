@@ -203,6 +203,13 @@ def main(args: argparse.Namespace):
     print("Average latency per output token: "
           f"{avg_per_output_token_latency:.2f} s")
 
+    total_input_len = np.sum([input_len for input_len, _, _ in REQUEST_LATENCY])
+    print(f"Total input tokens: {total_input_len:.2f}")
+
+    total_output_len = np.sum([output_len for _, output_len, _ in REQUEST_LATENCY])
+    print(f"Total output tokens: {total_output_len:.2f}")
+    output_tokens_per_min = 60 * total_output_len / benchmark_time
+    print(f"Output token per minute: {output_tokens_per_min:.2f}")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
