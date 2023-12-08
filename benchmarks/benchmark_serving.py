@@ -72,6 +72,10 @@ def sample_requests(
         if prompt_len > 1024 or prompt_len + output_len > 2048:
             # Prune too long sequences.
             continue
+
+        # Overrides with fixed output len if specified through the arg.
+        if args.fixed_output_len > 0:
+            output_len = args.fixed_output_len
         filtered_dataset.append((prompt, prompt_len, output_len))
 
     # Sample the requests.
@@ -190,7 +194,7 @@ def main(args: argparse.Namespace):
 
     # Compute the latency statistics.
     avg_latency = np.mean([latency for _, _, latency in REQUEST_LATENCY])
-    print(f"Average latency: {avg_latency:.2f} s")
+    print(f"Average latency per request: {avg_latency:.2f} s")
     avg_per_token_latency = np.mean([
         latency / (prompt_len + output_len)
         for prompt_len, output_len, latency in REQUEST_LATENCY
@@ -226,6 +230,8 @@ if __name__ == "__main__":
                         help="Generates `best_of` sequences per prompt and "
                              "returns the best one.")
     parser.add_argument("--use-beam-search", action="store_true")
+    parser.add_argument("--fixed-output-len", type=int, default=0,
+                        help="Fixed output len when > 0.")
     parser.add_argument("--num-prompts", type=int, default=1000,
                         help="Number of prompts to process.")
     parser.add_argument("--request-rate", type=float, default=float("inf"),
